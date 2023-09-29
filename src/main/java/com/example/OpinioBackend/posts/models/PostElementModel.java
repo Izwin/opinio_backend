@@ -1,8 +1,6 @@
 package com.example.OpinioBackend.posts.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +15,8 @@ public class PostElementModel {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Enumerated(value = EnumType.STRING)
     private PostElementType postElementType;
     private String content;
 }

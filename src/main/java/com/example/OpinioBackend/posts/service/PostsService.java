@@ -6,6 +6,7 @@ import com.example.OpinioBackend.posts.repository.PostsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,11 +26,11 @@ public class PostsService {
     private final LooksRepository looksRepository;
     private final String imageLocation = "images/profile/";
 
-    public List<PostModel> getPosts() {
-        return postsRepository.findAll();
+    public List<PostModel> getPosts(int page,int size) {
+        return postsRepository.findAll(PageRequest.of(page,size)).stream().toList();
     }
-    public List<LookModel> getLooks() {
-        return looksRepository.findAll();
+    public List<LookModel> getLooks(int page,int size) {
+        return looksRepository.findAll(PageRequest.of(page,size)).stream().toList();
     }
     public boolean addPost(PostCreateRequestModel postCreateRequestModel, List<MultipartFile> files, MultipartFile image) throws IOException {
         PostModel postModel = PostModel.builder().title(postCreateRequestModel.getTitle()).published(new Date(System.currentTimeMillis())).build();

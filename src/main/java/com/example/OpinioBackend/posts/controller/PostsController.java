@@ -24,12 +24,12 @@ public class PostsController {
 
     @GetMapping
     public ResponseEntity<List<PostModel>> getPosts(@RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "0") int size) {
-        return ResponseEntity.ok().body(postsService.getPosts());
+        return ResponseEntity.ok().body(postsService.getPosts(page,size));
     }
 
     @GetMapping("/looks")
     public ResponseEntity<List<LookModel>> getLooks(@RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "0") int size) {
-        return ResponseEntity.ok().body(postsService.getLooks());
+        return ResponseEntity.ok().body(postsService.getLooks(page,size));
     }
 
     @PostMapping(value = "/add")
