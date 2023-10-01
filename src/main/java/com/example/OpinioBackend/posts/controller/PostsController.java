@@ -34,7 +34,7 @@ public class PostsController {
 
     @PostMapping(value = "/add")
     public ResponseEntity addPost(@RequestPart String json,@RequestPart List<MultipartFile> files,@RequestPart MultipartFile image ) throws IOException {
-        System.out.println(123);
+
         ObjectMapper objectMapper = new ObjectMapper();
         PostCreateRequestModel postCreateRequestModel = objectMapper.readValue(json, PostCreateRequestModel.class);
 
