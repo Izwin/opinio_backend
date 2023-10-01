@@ -27,7 +27,8 @@ public class PostsService {
     private final String imageLocation = "images/profile/";
 
     public List<PostModel> getPosts(int page,int size) {
-        return postsRepository.findAll(PageRequest.of(page,size)).stream().toList();
+        var list =  postsRepository.findAll(PageRequest.of(page,size)).stream().toList();
+        return list;
     }
     public List<LookModel> getLooks(int page,int size) {
         return looksRepository.findAll(PageRequest.of(page,size)).stream().toList();
@@ -35,8 +36,9 @@ public class PostsService {
     public boolean addPost(PostCreateRequestModel postCreateRequestModel, List<MultipartFile> files, MultipartFile image) throws IOException {
         PostModel postModel = PostModel.builder().title(postCreateRequestModel.getTitle()).published(new Date(System.currentTimeMillis())).build();
 
-        String filename = postCreateRequestModel.getTitle() + System.currentTimeMillis() + ".jpg";
+        String filename = postCreateRequestModel.getTitle().hashCode() + System.currentTimeMillis() + ".jpg";
         Path path = Path.of(imageLocation + filename);
+        Files.createDirectories(path.getParent());
         Files.write(path, image.getBytes());
 
 
@@ -76,6 +78,7 @@ public class PostsService {
 
         String filename = lookCreateRequestModel.getTitle() + System.currentTimeMillis() + ".jpg";
         Path path = Path.of(imageLocation + filename);
+        Files.createDirectories(path.getParent());
         Files.write(path, image.getBytes());
 
 
@@ -99,8 +102,9 @@ public class PostsService {
         return true;
     }
 
-    public Resource getImage(String filename) {
+    public Resource getImage(String filename) throws IOException {
         Path path = Path.of(imageLocation + filename);
+        Files.createDirectories(path.getParent());
         Resource resource = UrlResource.from(path.toUri());
         return resource;
     }

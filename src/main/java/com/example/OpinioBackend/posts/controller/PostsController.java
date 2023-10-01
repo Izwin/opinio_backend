@@ -42,7 +42,7 @@ public class PostsController {
     }
 
     @GetMapping("/{filename}")
-    public ResponseEntity getImage(@PathVariable String filename){
+    public ResponseEntity getImage(@PathVariable String filename) throws IOException {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(postsService.getImage(filename));
     }
 
