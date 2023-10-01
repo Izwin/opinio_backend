@@ -19,6 +19,6 @@ public class PostElementModel {
     @Enumerated(value = EnumType.STRING)
     private PostElementType postElementType;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
 }

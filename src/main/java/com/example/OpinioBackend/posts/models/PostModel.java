@@ -27,6 +27,6 @@ public class PostModel {
 
     private String image;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<PostElementModel> elements;
 }
