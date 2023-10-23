@@ -12,8 +12,6 @@ RUN mvn -f /home/app/pom.xml clean package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 
 VOLUME /tmp
-EXPOSE 8080
-RUN pwd && ls
-ARG JAR_FILE=target/OpinioBackend-0.0.1-SNAPSHOT.jar
-ADD ${JAR_FILE} app.jar
+COPY target/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
+EXPOSE 8080
