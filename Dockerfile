@@ -10,6 +10,7 @@ RUN mvn -f /home/app/pom.xml clean package -DskipTests
 # Package stage
 #
 FROM eclipse-temurin:17-jre-alpine
+VOLUME /tmp
 
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app/build/libs/OpinioBackend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","target/OpinioBackend-0.0.1-SNAPSHOT.jar"]
