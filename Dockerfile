@@ -10,6 +10,6 @@ RUN mvn -f /home/app/pom.xml clean package
 # Package stage
 #
 FROM eclipse-temurin:17-jre-alpine
-COPY --from=build target/OpinioBackend-0.0.1.jar /OpinioBackend.jar
+COPY --from=build target/OpinioBackend-0.0.1-SNAPSHOT.jar /OpinioBackend.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/OpinioBackend.jar"]
