@@ -3,7 +3,15 @@ package com.example.OpinioBackend.posts.service;
 import com.example.OpinioBackend.posts.models.*;
 import com.example.OpinioBackend.posts.repository.LooksRepository;
 import com.example.OpinioBackend.posts.repository.PostsRepository;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
@@ -14,17 +22,19 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PostsService {
     private final PostsRepository postsRepository;
     private final LooksRepository looksRepository;
-    private final String imageLocation = "images/profile/";
+
+    @Value("${gcp.bucket.name}")
+    private String bucketName;
+
+    @Autowired
+    Storage storage;
 
     public List<PostModel> getPosts(int page,int size) {
         var list =  postsRepository.findAll(PageRequest.of(page,size)).stream().toList();
@@ -37,9 +47,10 @@ public class PostsService {
         PostModel postModel = PostModel.builder().title(postCreateRequestModel.getTitle()).published(new Date(System.currentTimeMillis())).build();
 
         String filename = postCreateRequestModel.getTitle().hashCode() + System.currentTimeMillis() + ".jpg";
-        Path path = Path.of(imageLocation + filename);
-        Files.createDirectories(path.getParent());
-        Files.write(path, image.getBytes());
+        BlobId blobId = BlobId.of(bucketName, filename);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).
+                setContentType(image.getContentType()).build();
+        Blob blob = storage.create(blobInfo,image.getBytes());
 
 
         postModel.setImage(filename);
@@ -49,9 +60,12 @@ public class PostsService {
             switch (postElementRequestModel.getPostElementType()) {
                 case IMAGE:
                     String postElementFilename = postElementRequestModel.hashCode() + System.currentTimeMillis() + ".jpg";
-                    Path postElementpath = Path.of(imageLocation + postElementFilename);
-                    MultipartFile multipartFile = files.stream().filter(f -> f.getOriginalFilename().equals(postElementRequestModel.getContent())).toList().get(0);
-                    Files.write(postElementpath, multipartFile.getBytes());
+                    MultipartFile multipartFile = files.stream().filter(f -> Objects.equals(f.getOriginalFilename(), postElementRequestModel.getContent())).toList().get(0);
+
+                    BlobId imageFileBlobId = BlobId.of(bucketName, postElementFilename);
+                    BlobInfo imageFileBlobInfo = BlobInfo.newBuilder(blobId).
+                            setContentType(multipartFile.getContentType()).build();
+                    Blob imafeFileBlob = storage.create(blobInfo,multipartFile.getBytes());
 
                     PostElementModel postElementModel = PostElementModel.builder().postElementType(PostElementType.IMAGE).content(postElementFilename).build();
                     elements.add(postElementModel);
@@ -77,9 +91,10 @@ public class PostsService {
                 .build();
 
         String filename = lookCreateRequestModel.getTitle() + System.currentTimeMillis() + ".jpg";
-        Path path = Path.of(imageLocation + filename);
-        Files.createDirectories(path.getParent());
-        Files.write(path, image.getBytes());
+        BlobId blobId = BlobId.of(bucketName, filename);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).
+                setContentType(image.getContentType()).build();
+        Blob blob = storage.create(blobInfo,image.getBytes());
 
 
         lookModel.setImage(filename);
@@ -89,9 +104,11 @@ public class PostsService {
         for (LookElementModel lookElement : lookCreateRequestModel.getElements()) {
             LookElementModel lookElementModel = LookElementModel.builder().url(lookElement.getUrl()).price(lookElement.getPrice()).title(lookElement.getTitle()).build();
             String lookElementFilename = lookElement.hashCode() + System.currentTimeMillis() + ".jpg";
-            Path lookElementpath = Path.of(imageLocation + lookElementFilename);
             MultipartFile multipartFile = files.stream().filter(f -> f.getOriginalFilename().equals(lookElement.getImage())).toList().get(0);
-            Files.write(lookElementpath, multipartFile.getBytes());
+            BlobId imageFileBlobId = BlobId.of(bucketName, multipartFile.getOriginalFilename());
+            BlobInfo imageFileBlobInfo = BlobInfo.newBuilder(blobId).
+                    setContentType(multipartFile.getContentType()).build();
+            Blob imafeFileBlob = storage.create(blobInfo,multipartFile.getBytes());
 
             lookElementModel.setImage(lookElementFilename);
             elements.add(lookElementModel);
@@ -103,9 +120,11 @@ public class PostsService {
     }
 
     public Resource getImage(String filename) throws IOException {
-        Path path = Path.of(imageLocation + filename);
-        Files.createDirectories(path.getParent());
-        Resource resource = UrlResource.from(path.toUri());
+
+        Blob blob = storage.get(bucketName, filename);
+        ByteArrayResource resource = new ByteArrayResource(
+                blob.getContent());
+
         return resource;
     }
 }
