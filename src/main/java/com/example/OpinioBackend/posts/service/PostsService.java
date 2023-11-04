@@ -36,13 +36,15 @@ public class PostsService {
     @Autowired
     Storage storage;
 
-    public List<PostModel> getPosts(int page,int size) {
-        var list =  postsRepository.findAll(PageRequest.of(page,size)).stream().toList();
+    public List<PostModel> getPosts(int page, int size) {
+        var list = postsRepository.findAll(PageRequest.of(page, size)).stream().toList();
         return list;
     }
-    public List<LookModel> getLooks(int page,int size) {
-        return looksRepository.findAll(PageRequest.of(page,size)).stream().toList();
+
+    public List<LookModel> getLooks(int page, int size) {
+        return looksRepository.findAll(PageRequest.of(page, size)).stream().toList();
     }
+
     public boolean addPost(PostCreateRequestModel postCreateRequestModel, List<MultipartFile> files, MultipartFile image) throws IOException {
         PostModel postModel = PostModel.builder().title(postCreateRequestModel.getTitle()).published(new Date(System.currentTimeMillis())).build();
 
@@ -50,7 +52,7 @@ public class PostsService {
         BlobId blobId = BlobId.of(bucketName, filename);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).
                 setContentType(image.getContentType()).build();
-        Blob blob = storage.create(blobInfo,image.getBytes());
+        Blob blob = storage.create(blobInfo, image.getBytes());
 
 
         postModel.setImage(filename);
@@ -65,7 +67,7 @@ public class PostsService {
                     BlobId imageFileBlobId = BlobId.of(bucketName, postElementFilename);
                     BlobInfo imageFileBlobInfo = BlobInfo.newBuilder(imageFileBlobId).
                             setContentType(multipartFile.getContentType()).build();
-                    Blob imafeFileBlob = storage.create(imageFileBlobInfo,multipartFile.getBytes());
+                    Blob imafeFileBlob = storage.create(imageFileBlobInfo, multipartFile.getBytes());
 
                     PostElementModel postElementModel = PostElementModel.builder().postElementType(PostElementType.IMAGE).content(postElementFilename).build();
                     elements.add(postElementModel);
@@ -94,7 +96,7 @@ public class PostsService {
         BlobId blobId = BlobId.of(bucketName, filename);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).
                 setContentType(image.getContentType()).build();
-        Blob blob = storage.create(blobInfo,image.getBytes());
+        Blob blob = storage.create(blobInfo, image.getBytes());
 
 
         lookModel.setImage(filename);
@@ -108,7 +110,7 @@ public class PostsService {
             BlobId imageFileBlobId = BlobId.of(bucketName, lookElementFilename);
             BlobInfo imageFileBlobInfo = BlobInfo.newBuilder(imageFileBlobId).
                     setContentType(multipartFile.getContentType()).build();
-            Blob imafeFileBlob = storage.create(imageFileBlobInfo,multipartFile.getBytes());
+            Blob imafeFileBlob = storage.create(imageFileBlobInfo, multipartFile.getBytes());
 
             lookElementModel.setImage(lookElementFilename);
             elements.add(lookElementModel);
@@ -132,11 +134,10 @@ public class PostsService {
         PostModel postModel = postsRepository.findById(id).orElseThrow();
 
         Blob blob = storage.get(bucketName, postModel.getImage());
-        try{
+        try {
             blob.delete();
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -144,17 +145,43 @@ public class PostsService {
             switch (postElementModel.getPostElementType()) {
                 case IMAGE:
                     Blob blob1 = storage.get(bucketName, postElementModel.getContent());
-                    try{
+                    try {
                         blob1.delete();
 
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
 
-                    }                    break;
+                    }
+                    break;
 
             }
         }
         postsRepository.deleteById(id);
+
+        return true;
+    }
+
+    public boolean deleteLook(long id) {
+        LookModel lookModel = looksRepository.findById(id).orElseThrow();
+
+        Blob blob = storage.get(bucketName, lookModel.getImage());
+        try {
+            blob.delete();
+
+        } catch (Exception e) {
+
+        }
+
+        for (LookElementModel lookElementModel : lookModel.getElements()) {
+            Blob blob1 = storage.get(bucketName, lookElementModel.getImage());
+            try {
+                blob1.delete();
+
+            } catch (Exception e) {
+
+            }
+            break;
+        }
+        looksRepository.deleteById(id);
 
         return true;
     }
