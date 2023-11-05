@@ -1,5 +1,6 @@
 package com.example.OpinioBackend.posts.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ public class PostElementModel {
     private Long id;
 
     @Enumerated(value = EnumType.STRING)
+    @JsonProperty(value = "type")
     private PostElementType postElementType;
 
     @Column(columnDefinition = "TEXT")

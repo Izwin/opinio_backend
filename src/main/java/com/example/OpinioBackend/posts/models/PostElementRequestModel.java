@@ -17,6 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostElementRequestModel {
-    public PostElementType postElementType;
+    public PostElementType type;
     public String content;
 }

@@ -7,21 +7,16 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 @Service
@@ -59,7 +54,7 @@ public class PostsService {
         List<PostElementModel> elements = new ArrayList<>();
 
         for (PostElementRequestModel postElementRequestModel : postCreateRequestModel.getElements()) {
-            switch (postElementRequestModel.getPostElementType()) {
+            switch (postElementRequestModel.getType()) {
                 case IMAGE:
                     String postElementFilename = postElementRequestModel.hashCode() + System.currentTimeMillis() + ".jpg";
                     MultipartFile multipartFile = files.stream().filter(f -> Objects.equals(f.getOriginalFilename(), postElementRequestModel.getContent())).toList().get(0);
