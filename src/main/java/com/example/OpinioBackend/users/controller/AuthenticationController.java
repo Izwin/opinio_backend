@@ -1,7 +1,6 @@
 package com.example.OpinioBackend.users.controller;
 
-import com.example.OpinioBackend.posts.models.LookCreateRequestModel;
-import com.example.OpinioBackend.posts.models.PostCreateRequestModel;
+import com.example.OpinioBackend.posts.models.*;
 import com.example.OpinioBackend.posts.service.PostsService;
 import com.example.OpinioBackend.users.model.AuthenticationRequest;
 import com.example.OpinioBackend.users.model.RefreshTokenRequest;
@@ -65,6 +64,18 @@ public class AuthenticationController {
     public ResponseEntity deleteLookById(@PathVariable long id){
         return ResponseEntity.ok(postsService.deleteLook(id));
 
+    }
+
+
+    @PostMapping("edit/{id}")
+    public ResponseEntity editPost(@PathVariable long id, @RequestPart PostEditRequestModel json, @RequestPart(required = false) List<MultipartFile> files, @RequestPart(required = false) MultipartFile image) throws IOException {
+        return ResponseEntity.ok(postsService.editPost(id,json,image,files));
+
+    }
+
+    @PostMapping("edit_look/{id}")
+    public ResponseEntity editLook(@PathVariable long id, @RequestPart LookEditRequestModel json, @RequestPart(required = false) List<MultipartFile> files, @RequestPart(required = false) MultipartFile image) throws IOException {
+        return ResponseEntity.ok(postsService.editLook(id,json,image,files));
     }
 
 
