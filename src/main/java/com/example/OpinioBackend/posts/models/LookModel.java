@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,9 @@ public class LookModel {
     private String title;
 
     private String description;
+
+    @ColumnDefault(value = "0")
+    private int views;
 
     private String image;
 

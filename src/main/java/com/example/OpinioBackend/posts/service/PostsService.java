@@ -54,7 +54,7 @@ public class PostsService {
     public boolean addPost(PostCreateRequestModel postCreateRequestModel, List<MultipartFile> files, MultipartFile image) throws IOException {
         PostModel postModel = PostModel.builder().title(postCreateRequestModel.getTitle()).published(new Date(System.currentTimeMillis())).build();
 
-        String filename = postCreateRequestModel.getTitle().hashCode() + System.currentTimeMillis() + ".jpg";
+        String filename = postCreateRequestModel.getTitle().hashCode() + System.currentTimeMillis() + ".png";
         BlobId blobId = BlobId.of(bucketName, filename);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).
                 setContentType(image.getContentType()).build();
@@ -67,7 +67,7 @@ public class PostsService {
         for (PostElementRequestModel postElementRequestModel : postCreateRequestModel.getElements()) {
             switch (postElementRequestModel.getType()) {
                 case IMAGE:
-                    String postElementFilename = postElementRequestModel.hashCode() + System.currentTimeMillis() + ".jpg";
+                    String postElementFilename = postElementRequestModel.hashCode() + System.currentTimeMillis() + ".png";
                     MultipartFile multipartFile = files.stream().filter(f -> Objects.equals(f.getOriginalFilename(), postElementRequestModel.getContent())).toList().get(0);
 
                     BlobId imageFileBlobId = BlobId.of(bucketName, postElementFilename);
@@ -98,7 +98,7 @@ public class PostsService {
                 .published(new Date(System.currentTimeMillis()))
                 .build();
 
-        String filename = lookCreateRequestModel.getTitle() + System.currentTimeMillis() + ".jpg";
+        String filename = lookCreateRequestModel.getTitle() + System.currentTimeMillis() + ".png";
         BlobId blobId = BlobId.of(bucketName, filename);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).
                 setContentType(image.getContentType()).build();
@@ -111,7 +111,7 @@ public class PostsService {
 
         for (LookElementModel lookElement : lookCreateRequestModel.getElements()) {
             LookElementModel lookElementModel = LookElementModel.builder().url(lookElement.getUrl()).price(lookElement.getPrice()).title(lookElement.getTitle()).build();
-            String lookElementFilename = lookElement.hashCode() + System.currentTimeMillis() + ".jpg";
+            String lookElementFilename = lookElement.hashCode() + System.currentTimeMillis() + ".png";
             MultipartFile multipartFile = files.stream().filter(f -> f.getOriginalFilename().equals(lookElement.getImage())).toList().get(0);
             BlobId imageFileBlobId = BlobId.of(bucketName, lookElementFilename);
             BlobInfo imageFileBlobInfo = BlobInfo.newBuilder(imageFileBlobId).
@@ -218,7 +218,7 @@ public class PostsService {
             }
         }
 
-        String filename = postEditRequestModel.getTitle().hashCode() + System.currentTimeMillis() + ".jpg";
+        String filename = postEditRequestModel.getTitle().hashCode() + System.currentTimeMillis() + ".png";
         BlobId blobId = BlobId.of(bucketName, filename);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).
                 setContentType(image.getContentType()).build();
@@ -231,7 +231,7 @@ public class PostsService {
         for (PostElementRequestModel postElementRequestModel : postEditRequestModel.getElements()) {
             switch (postElementRequestModel.getType()) {
                 case IMAGE:
-                    String postElementFilename = postElementRequestModel.hashCode() + System.currentTimeMillis() + ".jpg";
+                    String postElementFilename = postElementRequestModel.hashCode() + System.currentTimeMillis() + ".png";
                     MultipartFile multipartFile = files.stream().filter(f -> Objects.equals(f.getOriginalFilename(), postElementRequestModel.getContent())).toList().get(0);
 
                     BlobId imageFileBlobId = BlobId.of(bucketName, postElementFilename);
@@ -283,7 +283,7 @@ public class PostsService {
             break;
         }
 
-        String filename = lookEditRequestModel.getTitle().hashCode() + System.currentTimeMillis() + ".jpg";
+        String filename = lookEditRequestModel.getTitle().hashCode() + System.currentTimeMillis() + ".png";
         BlobId blobId = BlobId.of(bucketName, filename);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).
                 setContentType(image.getContentType()).build();
@@ -295,7 +295,7 @@ public class PostsService {
 
         for (LookElementModel lookElement : lookEditRequestModel.getElements()) {
             LookElementModel lookElementModel = LookElementModel.builder().url(lookElement.getUrl()).price(lookElement.getPrice()).title(lookElement.getTitle()).build();
-            String lookElementFilename = lookElement.hashCode() + System.currentTimeMillis() + ".jpg";
+            String lookElementFilename = lookElement.hashCode() + System.currentTimeMillis() + ".png";
             MultipartFile multipartFile = files.stream().filter(f -> f.getOriginalFilename().equals(lookElement.getImage())).toList().get(0);
             BlobId imageFileBlobId = BlobId.of(bucketName, lookElementFilename);
             BlobInfo imageFileBlobInfo = BlobInfo.newBuilder(imageFileBlobId).
@@ -308,6 +308,7 @@ public class PostsService {
 
         lookModel.setElements(elements);
         lookModel.setTitle(lookEditRequestModel.title);
+        lookModel.setViews(lookEditRequestModel.views);
         lookModel.setDescription(lookEditRequestModel.description);
 
         looksRepository.save(lookModel);
