@@ -119,6 +119,9 @@ public class PostsService {
             Blob imafeFileBlob = storage.create(imageFileBlobInfo, multipartFile.getBytes());
 
             lookElementModel.setImage(lookElementFilename);
+            lookElementModel.setUrl(lookElement.getUrl());
+            lookElementModel.setTitle(lookElement.getTitle());
+            lookElementModel.setPrice(lookElement.getPrice());
             elements.add(lookElementModel);
         }
 
@@ -303,6 +306,8 @@ public class PostsService {
             Blob imafeFileBlob = storage.create(imageFileBlobInfo, multipartFile.getBytes());
 
             lookElementModel.setImage(lookElementFilename);
+            lookElementModel.setTitle(lookElement.getTitle());
+            lookElementModel.setUrl(lookElement.getUrl());
             elements.add(lookElementModel);
         }
 
