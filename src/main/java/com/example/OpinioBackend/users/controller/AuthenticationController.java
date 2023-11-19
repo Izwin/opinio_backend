@@ -39,7 +39,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity addPost(@RequestPart String json,@RequestPart List<MultipartFile> files,@RequestPart MultipartFile image ) throws IOException {
+    public ResponseEntity addPost(@RequestPart String json,@RequestPart(required = false) List<MultipartFile> files,@RequestPart MultipartFile image ) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         PostCreateRequestModel postCreateRequestModel = objectMapper.readValue(json, PostCreateRequestModel.class);
@@ -48,7 +48,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/add_look")
-    public ResponseEntity addLook(@RequestPart LookCreateRequestModel json, @RequestPart List<MultipartFile> files, @RequestPart MultipartFile image ) throws IOException {
+    public ResponseEntity addLook(@RequestPart LookCreateRequestModel json, @RequestPart(required = false) List<MultipartFile> files, @RequestPart MultipartFile image ) throws IOException {
         System.out.println(123);
 
 
