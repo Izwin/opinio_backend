@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -24,6 +25,13 @@ public class PostModel {
     private Date published;
 
     private int views;
+
+    public int getViews(){
+        if(reads==null) return 0;
+        return reads.size();
+    }
+
+    private Set<String> reads = Set.of();
 
     private String image;
 

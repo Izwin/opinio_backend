@@ -41,5 +41,17 @@ public class PostsController {
     }
 
 
+    @GetMapping("/read")
+    public ResponseEntity<Boolean> readPost(@RequestParam int id, @RequestParam String device) {
+        return ResponseEntity.ok().body(postsService.readPost(id,device));
+    }
+
+    @GetMapping("/read_look")
+    public ResponseEntity<Boolean> readLook(@RequestParam int id, @RequestParam String device) {
+        return ResponseEntity.ok().body(postsService.readLook(id,device));
+    }
+
+
+
 
 }

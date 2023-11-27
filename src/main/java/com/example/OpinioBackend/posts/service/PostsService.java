@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,10 +34,10 @@ public class PostsService {
 
     public List<PostModel> getPosts(int page, int size,String search) {
         if(search!=null){
-            return postsRepository.findByTitleContainingIgnoreCase(search,PageRequest.of(page, size)).stream().toList();
+            return postsRepository.findByTitleContainingIgnoreCase(search,PageRequest.of(page, size,Sort.by( Sort.Direction.DESC,"published"))).stream().toList();
         }
         else{
-            return postsRepository.findAll(PageRequest.of(page, size)).stream().toList();
+            return postsRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"published"))).stream().toList();
         }
 
 
@@ -44,10 +45,10 @@ public class PostsService {
 
     public List<LookModel> getLooks(int page, int size,String search) {
         if(search!=null){
-            return looksRepository.findByTitleContainingIgnoreCase(search,PageRequest.of(page, size)).stream().toList();
+            return looksRepository.findByTitleContainingIgnoreCase(search,PageRequest.of(page, size,Sort.by(Sort.Direction.DESC,"published"))).stream().toList();
         }
         else{
-            return looksRepository.findAll(PageRequest.of(page, size)).stream().toList();
+            return looksRepository.findAll(PageRequest.of(page, size,Sort.by(Sort.Direction.DESC,"published"))).stream().toList();
         }
     }
 
@@ -321,5 +322,22 @@ public class PostsService {
         return true;
     }
 
+
+    public boolean readLook(long id,String device){
+        LookModel lookModel = looksRepository.findById(id).orElseThrow();
+        if(lookModel.getReads()==null) lookModel.setReads(new HashSet<>());
+        lookModel.getReads().add(device);
+        looksRepository.save(lookModel);
+        return true;
+
+    }
+
+    public boolean readPost(long id,String device){
+        PostModel postModel = postsRepository.findById(id).orElseThrow();
+        if(postModel.getReads()==null) postModel.setReads(new HashSet<>());
+        postModel.getReads().add(device);
+        postsRepository.save(postModel);
+        return true;
+    }
 
 }

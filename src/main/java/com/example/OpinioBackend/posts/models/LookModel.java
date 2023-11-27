@@ -10,6 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -31,6 +32,14 @@ public class LookModel {
     private String image;
 
     private Date published;
+
+    public int getViews(){
+        if(reads==null) return 0;
+        return reads.size();
+    }
+
+
+    private Set<String> reads = Set.of();;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<LookElementModel> elements;
