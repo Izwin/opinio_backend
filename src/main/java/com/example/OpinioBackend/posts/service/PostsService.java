@@ -84,6 +84,11 @@ public class PostsService {
                     elements.add(titleElementModel);
                     break;
 
+                case TEXT:
+                    PostElementModel textElementModel = PostElementModel.builder().postElementType(PostElementType.TEXT).content(postElementRequestModel.getContent()).build();
+                    elements.add(textElementModel);
+                    break;
+
             }
         }
 
@@ -249,6 +254,10 @@ public class PostsService {
                 case TITLE:
                     PostElementModel titleElementModel = PostElementModel.builder().postElementType(PostElementType.TITLE).content(postElementRequestModel.getContent()).build();
                     elements.add(titleElementModel);
+                    break;
+                case TEXT:
+                    PostElementModel textElementModel = PostElementModel.builder().postElementType(PostElementType.TEXT).content(postElementRequestModel.getContent()).build();
+                    elements.add(textElementModel);
                     break;
 
             }
