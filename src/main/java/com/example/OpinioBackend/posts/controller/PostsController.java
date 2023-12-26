@@ -34,6 +34,10 @@ public class PostsController {
     public ResponseEntity<List<LookModel>> getLooks(@RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "0") int size,@RequestParam(required = false) String search) {
         return ResponseEntity.ok().body(postsService.getLooks(page,size,search));
     }
+    @GetMapping("/test")
+    public ResponseEntity test(@RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "0") int size,@RequestParam(required = false) String search) {
+        return ResponseEntity.ok().body("OK");
+    }
 
     @GetMapping("/{filename}")
     public ResponseEntity getImage(@PathVariable String filename) throws IOException {
