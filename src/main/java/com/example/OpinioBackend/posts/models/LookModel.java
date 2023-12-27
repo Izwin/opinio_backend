@@ -35,7 +35,7 @@ public class LookModel {
 
     public int getViews(){
         if(reads==null) return 0;
-        return reads.size();
+        return reads.size() + views;
     }
 
 

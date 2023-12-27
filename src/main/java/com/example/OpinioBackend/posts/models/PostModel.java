@@ -28,8 +28,9 @@ public class PostModel {
 
     public int getViews(){
         if(reads==null) return 0;
-        return reads.size();
+        return reads.size() + views;
     }
+
 
     private Set<String> reads = Set.of();
 

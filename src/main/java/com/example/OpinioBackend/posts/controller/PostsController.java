@@ -35,7 +35,7 @@ public class PostsController {
         return ResponseEntity.ok().body(postsService.getLooks(page,size,search));
     }
     @GetMapping("/test")
-    public ResponseEntity test(@RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "0") int size,@RequestParam(required = false) String search) {
+    public ResponseEntity test() {
         return ResponseEntity.ok().body("OK");
     }
 
