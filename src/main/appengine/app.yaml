@@ -1,8 +1,11 @@
-runtime: java
-env: flex
+runtime: java17
+env: standard
 handlers:
-  - url: /.*
-script: this field is required, but ignored
-
-manual_scaling:
-  instances: 1
+  - url: .*
+    script: auto
+automatic_scaling:
+  min_idle_instances: 1
+  max_idle_instances: automatic
+  min_pending_latency: automatic
+  max_pending_latency: automatic
+service_account: opinio-403522@appspot.gserviceaccount.com
