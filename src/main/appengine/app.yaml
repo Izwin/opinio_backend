@@ -1,2 +1,11 @@
-automatic_scaling:
-  min_instances: 1
+runtime: java
+env: flex
+runtime_config:
+operating_system: "ubuntu22"
+runtime_version: "21"
+handlers:
+  - url: /.*
+script: this field is required, but ignored
+
+manual_scaling:
+instances: 1
