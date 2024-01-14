@@ -5,8 +5,10 @@ handlers:
   - url: .*
     script: auto
 automatic_scaling:
-  min_idle_instances: automatic
-  max_idle_instances: automatic
+  min_instances: 1
+  max_instances: 10
   min_pending_latency: automatic
   max_pending_latency: automatic
+inbound_services:
+- warmup
 service_account: opinio-403522@appspot.gserviceaccount.com
